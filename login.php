@@ -11,7 +11,7 @@
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.1/css/font-awesome.min.css">
     <link href='https://fonts.googleapis.com/css?family=Passion+One' rel='stylesheet' type='text/css'>
     <link href='https://fonts.googleapis.com/css?family=Oxygen' rel='stylesheet' type='text/css'>
-<!--    <script src="main.js"></script>-->
+    <script src="main.js"></script>
 </head>
 
 
@@ -47,10 +47,12 @@ try {
 
 ?>
 
+
+
 <!-- Large modal -->
 <button type="button" class="btn btn-primary" data-toggle="modal" data-target=".bs-example-modal-lg">Create Event</button>
 
-<div class="modal fade bs-example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel">
+<div class="modal fade bs-example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" id="myModal">
     <div class="modal-dialog modal-lg" role="document">
         <div class="modal-content">
             <div class="modal-header">
@@ -73,8 +75,11 @@ try {
 
 
                     <div class="form-group">
-                        <label for="image" class="control-label">Upload Image for Event:</label>
-                        <input type="file" id="image" accept=".jpeg,.png,.gif,.jpg">
+                        <form method="post" enctype="multipart/form-data" id="uploadform">
+                            Upload a File:
+                            <input type="file" name="myfile" id="fileToUpload">
+                            <button type="submit" name="submit" id="upload" >Upload</button>
+                        </form>
                     </div>
 
                     <div class="form-group">
@@ -157,7 +162,7 @@ try {
                     </div>
 
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                        <button type="button" class="btn btn-default" data-dismiss="modal" id="close">Close</button>
                         <input type="submit" class="btn btn-primary" value="Done">
                     </div>
                 </form>
@@ -167,10 +172,30 @@ try {
 </div>
 
 <span id="result">
-
 </span>
 
 <script>
+
+
+    $("#upload").on("click",function (event) {
+        event.preventDefault();
+        // alert(formdata);
+        $.ajax({
+            type:"POST",
+            url:'upload.php',
+            dataType:'text',
+            data:formdata,
+            success: function(data){
+
+
+            },
+            error:function (err) {
+                console.log(err);
+                alert(err);
+            }
+        });
+    });
+
     $("#submitform").on("submit",function (event) {
         event.preventDefault();
         console.log( $(this).serialize() );
@@ -186,7 +211,8 @@ try {
 
                 var res = $.parseJSON(data);
                 //alert(res.result);
-                $.("#result").text(res.result[0]);
+                $('#close').click();
+                $("#result").text(res.result[0]);
 
 
             },
@@ -196,6 +222,7 @@ try {
             }
         });
     });
+
 </script>
 
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
