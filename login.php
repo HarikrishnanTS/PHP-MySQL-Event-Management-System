@@ -52,6 +52,18 @@ try {
 <!-- Large modal -->
 <button type="button" class="btn btn-primary" data-toggle="modal" data-target=".bs-example-modal-lg">Create Event</button>
 
+<a type="button" class="btn btn-primary" href="index.php">Log Out</a>
+
+
+<h1>
+    <center>
+        Your Events.
+        <br>
+        <br>
+
+    </center>
+</h1>
+
 <div class="modal fade bs-example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" id="myModal">
     <div class="modal-dialog modal-lg" role="document">
         <div class="modal-content">
@@ -60,11 +72,8 @@ try {
                 <h4 class="modal-title" id="exampleModalLabel">New Event</h4>
             </div>
             <div class="modal-body">
-                <form enctype="multipart/form-data" method="post" id="submitform">
+                <form method="post" id="submitform" enctype="multipart/form-data">
                     <div class="form-group">
-
-
-
                         <label class="control-label">Name of Event:</label>
                         <input type="text" class="form-control" id="recipient-name" name="event">
                     </div>
@@ -75,11 +84,8 @@ try {
 
 
                     <div class="form-group">
-                        <form method="post" enctype="multipart/form-data" id="uploadform">
                             Upload a File:
-                            <input type="file" name="myfile" id="fileToUpload">
-                            <button type="submit" name="submit" id="upload" >Upload</button>
-                        </form>
+                            <input type="file" name="file" id="fileToUpload">
                     </div>
 
                     <div class="form-group">
@@ -163,7 +169,7 @@ try {
 
                     <div class="modal-footer">
                         <button type="button" class="btn btn-default" data-dismiss="modal" id="close">Close</button>
-                        <input type="submit" class="btn btn-primary" value="Done">
+                        <input type="submit" class="btn btn-primary" name="Done" value="Done" id="Done">
                     </div>
                 </form>
             </div>
@@ -171,54 +177,110 @@ try {
     </div>
 </div>
 
-<span id="result">
-</span>
+
+<?php
+
+$servername = "localhost";
+$password = "";
+$dbname = "myDBPDO";
+$username = $_POST["username"];
+
+
+
+try {
+$conn = new PDO("mysql:host=$servername;dbname=$dbname",'root', $password);
+// set the PDO error mode to exception
+$conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+
+    $nRows = $conn->query("select count(*) from events WHERE username='$username'")->fetchColumn();
+
+    $dataarray=$conn->query("SELECT * FROM `events` WHERE Username='$username' ")->fetchAll();
+
+    $conn = null;
+
+    echo "<div class ='container'>";
+
+
+   for($i=1;$i<=$nRows;$i++)
+   {
+       if($i % 3==1)
+       {
+           echo "<div class='row'>";
+       }
+       $image= $dataarray[$i-1][5];
+        echo "<div class='col-lg-4'>";
+        echo $dataarray[$i-1][0];
+        echo "<div class='thumbnail'>
+                            <img src='/uploads/$image'";
+
+                                echo "<center><div class='caption'>";
+                                echo $dataarray[$i-1][4];
+                                echo "</center>";
+                           echo "</div>
+         
+                            </div>
+                            </div>";
+   }
+
+} catch (PDOException $e) {
+    echo $sql . "<br>" . $e->getMessage();
+}
+?>
+
 
 <script>
 
-
-    $("#upload").on("click",function (event) {
-        event.preventDefault();
-        // alert(formdata);
-        $.ajax({
-            type:"POST",
-            url:'upload.php',
-            dataType:'text',
-            data:formdata,
-            success: function(data){
-
-
-            },
-            error:function (err) {
-                console.log(err);
-                alert(err);
-            }
-        });
-    });
+//
+//    $("#uploadform").on("submit",function (event) {
+//        event.preventDefault();
+//
+//        $.ajax({
+//            type:"POST",
+//            url:'upload.php',
+//            data:new FormData(this),
+//            contentType: false,
+//            dataType:'text',
+//            success: function(data){
+//
+//
+//            },
+//            error:function (err) {
+//                console.log(err);
+//                alert(err);
+//            }
+//        });
+//    });
+//
 
     $("#submitform").on("submit",function (event) {
         event.preventDefault();
         console.log( $(this).serialize() );
-        var formdata = $(this).serialize();
+        var form = $('form')[0]; // You need to use standard javascript object here
+        var formData = new FormData(form);
         var username = '<?php echo $username; ?>';
         // alert(formdata);
         $.ajax({
             type:"POST",
             url:'addEvent.php?username='+username,
-            dataType:'text',
-            data:formdata,
+            data:formData,
+            processData: false,
+            contentType: false,
+            dataType:'json',
             success: function(data){
 
-                var res = $.parseJSON(data);
-                //alert(res.result);
+
+                //alert(data.result[0]);
                 $('#close').click();
-                $("#result").text(res.result[0]);
+                $('.container').append("<div class='col-lg-4'>"+data.result[0]+"<div class='thumbnail'>" +
+                    "<img src='/uploads/"+data.result[4]+"'>"+"<div class='caption'>"+data.result[1]+"</div>"
+                +"</div>");
 
 
             },
             error:function (err) {
                 console.log(err);
                 alert(err);
+
             }
         });
     });

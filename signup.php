@@ -1,6 +1,4 @@
 <?php
-namespace SendGrid;
-require __DIR__ . 'vendor/autoload.php';
 $servername = "localhost";
 $username = "root";
 $password = "";
@@ -28,22 +26,6 @@ try {
                 // use exec() because no results are returned
                 $conn->exec($sql);
                 $conn = null;
-
-
-
-                $from = new SendGrid\Email("Example User", "agbilotia1998@gmail.com");
-                $subject = "Sending with SendGrid is Fun";
-                $to = new SendGrid\Email("Example User", "test@example.com");
-                $content = new SendGrid\Content("text/plain", "and easy to do anywhere, even with PHP");
-                $mail = new SendGrid\Mail($from, $subject, $to, $content);
-
-                $apiKey = getenv('SENDGRID_API_KEY');
-                $sg = new \SendGrid($apiKey);
-
-                $response = $sg->client->mail()->send()->post($mail);
-                echo $response->statusCode();
-                print_r($response->headers());
-                echo $response->body();
 
 
                 echo 'Thankyou ', $name, ' For Registering.';

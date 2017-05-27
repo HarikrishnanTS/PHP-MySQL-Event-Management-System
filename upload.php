@@ -7,16 +7,16 @@ $uploadDirectory = "/uploads/";
 $errors = []; // Store all foreseen and unforseen errors here
 
 $fileExtensions = ['jpeg','jpg','png']; // Get all the file extensions
-$fileName = $_FILES['myfile']['name'];
-$fileSize = $_FILES['myfile']['size'];
-$fileTmpName  = $_FILES['myfile']['tmp_name'];
-$fileType = $_FILES['myfile']['type'];
+$fileName = $_FILES['file']['name'];
+$fileSize = $_FILES['file']['size'];
+$fileTmpName  = $_FILES['file']['tmp_name'];
+$fileType = $_FILES['file']['type'];
 $fileExtension = strtolower(end(explode('.',$fileName)));
 
 $uploadPath = $currentDir . $uploadDirectory . basename($fileName);
 
 
-if (isset($_POST['submit'])) {
+
 
     if (! in_array($fileExtension,$fileExtensions)) {
         $errors[] = "This file extension is not allowed. Please upload a JPEG or PNG file";
@@ -39,7 +39,8 @@ if (isset($_POST['submit'])) {
             echo $error . "These are the errors" . "\n";
         }
     }
-}
+
+
 
 
 ?>
