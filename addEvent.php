@@ -55,6 +55,7 @@ $dbname = "myDBPDO";
 
         $username = $_GET['username'];
         $event = $_POST["event"];
+        $link=$_POST["link"];
         $description = $_POST["description"];
         $date = $_POST["date"];
         $month = $_POST["month"];
@@ -65,14 +66,15 @@ $dbname = "myDBPDO";
 
         if(isset($_SESSION['user'])) {
 
-            $sql = "INSERT INTO events (Name,Description,DOE,DOC,Username,Image)
-                VALUES ('$event',' $description','$DOE','$DOC','$username','$fileName')";
+            $sql = "INSERT INTO events (Name,Description,DOE,DOC,Username,Image,Link)
+                VALUES ('$event',' $description','$DOE','$DOC','$username','$fileName','$link')";
             // use exec() because no results are returned
             $conn->exec($sql);
             $last_id = $conn->lastInsertId();
         }
-        $dataarray=array($event,$description,$DOC,$DOE,$fileName,$username,$last_id);
+        $dataarray=array($event,$description,$DOC,$DOE,$fileName,$username,$link);
         $data['result'] = $dataarray;
+        header("Location: /login.php");
         echo json_encode($data);
 
     } catch (PDOException $e) {

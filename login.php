@@ -6,7 +6,6 @@
 
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
-    <script src="main.js"></script>
     <link rel="stylesheet" type="text/css" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.1/css/font-awesome.min.css">
     <link href='https://fonts.googleapis.com/css?family=Passion+One' rel='stylesheet' type='text/css'>
@@ -82,6 +81,10 @@ if(!isset($_SESSION['user'])) {
                     <div class="form-group">
                         <label class="control-label">Name of Event:</label>
                         <input type="text" class="form-control" id="recipient-name" name="event">
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label">Link of Event:</label>
+                        <input type="text" class="form-control" id="recipient-name" name="link">
                     </div>
                     <div class="form-group">
                         <label for="message-text" class="control-label">Description:</label>
@@ -209,12 +212,9 @@ try {
     $conn = null;
 
     echo "<div class ='container'>";
+    echo "<div class='row'>";
 
-
-    for ($i = 1; $i <= $nRows; $i++) {
-        if ($i % 3 == 1) {
-            echo "<div class='row'>";
-        }
+    for ($i = $nRows; $i >=1; $i--) {
         $image = $dataarray[$i - 1][6];
         $id=$dataarray[$i-1][0];
         $DOC=$dataarray[$i-1][3];
@@ -222,22 +222,24 @@ try {
         $username=$dataarray[$i-1][4];
         $name=$dataarray[$i - 1][1];
         $description=$dataarray[$i - 1][5];
+        $link=$dataarray[$i-1][7];
+
+        if($i==$nRows)
+            echo "<div class='col-lg-4' id='$id' style='margin-left: 34%'>";
+
+        else
         echo "<div class='col-lg-4' id='$id'>";
 
         echo "<div class='thumbnail'><p><strong>Name of Event</strong> : $name</p><div class='thumbnail'>Date of Event : $DOE</div>
                             <img src='/uploads/$image'";
 
-        echo "<div class='thumbnail'><strong> Description :</strong> $description";
+        echo "<div class='thumbnail'><strong> Description :</strong> $description<br><a href='$link'>Link to the event</a>";
         echo "<center><div class='caption'> <a class ='btn btn-primary' href='/deleteevent.php?id=$id'>Delete</a>";
         echo "   <a class=\"btn btn-primary\" href='editeventpage.php?name=$name&id=$id&description=$description'>Edit</a></center>";
         echo "<br><br><div class='thumbnail'>Date of Creation : $DOC<br>By : $username</div></div></div>
               </div>
               </div>";
         echo "</div>";
-        if ($i % 3 == 1) {
-            echo "<div class='row'>";
-        }
-
     }
 
 } catch (PDOException $e) {
@@ -269,12 +271,14 @@ try {
             success: function (data) {
 
                 $('#close').click();
-                $('.container').append("<div class='col-lg-4'><div class='thumbnail'><strong>Name of Event : </strong>"+ data.result[0]+"<br><div class='thumbnail'>Date of Event : " + data.result[3]+
+                $('.row').append("<div class='col-lg-4'><div class='thumbnail'><strong>Name of Event : </strong>"+ data.result[0]+"<br><div class='thumbnail'>Date of Event : " + data.result[3]+
                     "</div><img src='/uploads/" + data.result[4] + "'>" + "<div class='caption'>" +
                     "<br><div class='thumbnail'><strong>Description : </strong>" + data.result[1]+
+                    "<br><a href='"+data.result[6]+"'>Link to the Event</a><br>"+
                     " <a class ='btn btn-primary'href='/deleteevent.php?id="+data.result[6]+"'>Delete</a> " +"<a class=\"btn btn-primary\" href='editeventpage.php?id="+data.result[6]+"?name="+data.result[0]+"?description="+data.result[1]+"'>Edit</a></center><br><br>"
                     +"<div class='thumbnail'>Date of Creation : "+data.result[2]+"<br>By : "+data.result[5]+"</div></div>"+
                    "</div></div>");
+                window.location.reload();
 
 
             },

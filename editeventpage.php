@@ -1,13 +1,43 @@
+<html>
+<head>
+    <title>
+        Create your event.
+    </title>
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <script src="main.js"></script>
+    <link rel="stylesheet" type="text/css" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.1/css/font-awesome.min.css">
+    <link href='https://fonts.googleapis.com/css?family=Passion+One' rel='stylesheet' type='text/css'>
+    <link href='https://fonts.googleapis.com/css?family=Oxygen' rel='stylesheet' type='text/css'>
+    <script src="main.js"></script>
+</head>
+
+
+<body>
+<center>
+    <h1 class='alert alert-danger'>
+        Are You Sure Want to Edit this event ?
+    </h1>
+</center>
+<br>
+
+<center>
+<button type="button" class="btn btn-primary" data-toggle="modal" data-target="#edit">Edit Event
+</button>
+</center>
+
 <?php
 
-$id = $_GET['id'];
-$name=$_GET['name'];
-$description=$_GET['description'];
+    $id = $_GET['id'];
+    $name = $_GET['name'];
+    $description = $_GET['description'];
 
-echo "
+    echo "
 
 <div class=\"modal fade bs-example-modal-lg\" tabindex=\"-1\" role=\"dialog\" aria-labelledby=\"myLargeModalLabel\"
-     id=\"edit\">
+     id='edit'>
     <div class=\"modal-dialog modal-lg\" role=\"document\">
         <div class=\"modal-content\">
             <div class=\"modal-header\">
@@ -20,6 +50,10 @@ echo "
                     <div class=\"form-group\">
                         <label class=\"control-label\">Name of Event:</label>
                         <input type=\"text\" class=\"form-control\" id=\"recipient-name\" name=\"event\" placeholder='$name'>
+                    </div>
+                    <div class=\"form-group\">
+                        <label class=\"control-label\">Link of Event:</label>
+                        <input type=\"text\" class=\"form-control\" id=\"recipient-name\" name=\"link\">
                     </div>
                     <div class=\"form-group\">
                         <label for=\"message-text\" class=\"control-label\">Description:</label>
@@ -120,3 +154,7 @@ echo "
         </div>
     </div>
 </div>";
+
+?>
+</body>
+</html>
