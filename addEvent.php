@@ -74,7 +74,6 @@ $dbname = "myDBPDO";
         }
         $dataarray=array($event,$description,$DOC,$DOE,$fileName,$username,$link);
         $data['result'] = $dataarray;
-        header("Location: /login.php");
         echo json_encode($data);
 
     } catch (PDOException $e) {

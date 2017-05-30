@@ -271,14 +271,14 @@ try {
             success: function (data) {
 
                 $('#close').click();
-                $('.row').append("<div class='col-lg-4'><div class='thumbnail'><strong>Name of Event : </strong>"+ data.result[0]+"<br><div class='thumbnail'>Date of Event : " + data.result[3]+
+                $('.row').append("<div class='col-lg-4' style='margin-left: 34%'><div class='thumbnail'><strong>Name of Event : </strong>"+ data.result[0]+"<br><div class='thumbnail'>Date of Event : " + data.result[3]+
                     "</div><img src='/uploads/" + data.result[4] + "'>" + "<div class='caption'>" +
                     "<br><div class='thumbnail'><strong>Description : </strong>" + data.result[1]+
                     "<br><a href='"+data.result[6]+"'>Link to the Event</a><br>"+
                     " <a class ='btn btn-primary'href='/deleteevent.php?id="+data.result[6]+"'>Delete</a> " +"<a class=\"btn btn-primary\" href='editeventpage.php?id="+data.result[6]+"?name="+data.result[0]+"?description="+data.result[1]+"'>Edit</a></center><br><br>"
                     +"<div class='thumbnail'>Date of Creation : "+data.result[2]+"<br>By : "+data.result[5]+"</div></div>"+
                    "</div></div>");
-                window.location.reload();
+
 
 
             },
