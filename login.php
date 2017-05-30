@@ -18,41 +18,45 @@
 <body>
 <?php
 
-$servername = "localhost";
-$username = "root";
-$password = "";
-$dbname = "myDBPDO";
+session_start();
+if(!isset($_SESSION['user'])) {
+    $servername = "localhost";
+    $username = "root";
+    $password = "";
+    $dbname = "myDBPDO";
 
-try {
+    try {
 
-    $conn = new PDO("mysql:host=$servername;dbname=$dbname", $username, $password);
-    $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+        $conn = new PDO("mysql:host=$servername;dbname=$dbname", $username, $password);
+        $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
-    $username = $_POST["username"];
-    $password = $_POST["password"];
+        $username = $_POST["username"];
+        $password = $_POST["password"];
 
-    "<input type='hidden' name='username' value='$username'>";
+        "<input type='hidden' name='username' value='$username'>";
 
-    $stmt = $conn->query("SELECT * FROM users WHERE username='$username'");
-    $row = $stmt->fetch(PDO::FETCH_ASSOC);
+        $stmt = $conn->query("SELECT * FROM users WHERE username='$username'");
+        $row = $stmt->fetch(PDO::FETCH_ASSOC);
 
-    if ($row['username'] == $username && $row['password'] == $password) {
-        echo 'Welcome ', $row['name'], "<br>";
-    } else {
-        echo 'Error Logging In !';
+        if ($row['username'] == $username && $row['password'] == $password) {
+            $_SESSION['user'] = 'popo';
+            echo 'Welcome ', $row['name'], "<br>";
+        } else {
+            $_SESSION['message'] = 'Invalid username or password.';
+            header("Location: /loginpage.php");
+        }
+    } catch (PDOException $e) {
+        echo $sql . "<br>" . $e->getMessage();
     }
-} catch (PDOException $e) {
-    echo $sql . "<br>" . $e->getMessage();
 }
-
 ?>
 
 
 <!-- Large modal -->
-<button type="button" class="btn btn-primary" data-toggle="modal" data-target=".bs-example-modal-lg">Create Event
+<button type="button" class="btn btn-primary" data-toggle="modal" data-target="#myModal">Create Event
 </button>
 
-<a type="button" class="btn btn-primary" href="index.php">Log Out</a>
+<a type="button" class="btn btn-primary" href="logout.php" id="logout">Log Out</a>
 
 
 <h1>
@@ -74,7 +78,7 @@ try {
                 <h4 class="modal-title" id="exampleModalLabel">New Event</h4>
             </div>
             <div class="modal-body">
-                <form method="post" id="submitform" enctype="multipart/form-data">
+                <form method="post" id="submitform"  enctype="multipart/form-data">
                     <div class="form-group">
                         <label class="control-label">Name of Event:</label>
                         <input type="text" class="form-control" id="recipient-name" name="event">
@@ -180,12 +184,17 @@ try {
 </div>
 
 
-<?php
 
+<?php
 $servername = "localhost";
 $password = "";
 $dbname = "myDBPDO";
+
+if(!isset($_SESSION['user']))
 $username = $_POST["username"];
+
+else
+$username=$_SESSION['user'];
 
 
 try {
@@ -206,19 +215,29 @@ try {
         if ($i % 3 == 1) {
             echo "<div class='row'>";
         }
-        $image = $dataarray[$i - 1][5];
-        echo "<div class='col-lg-4'>";
-        echo $dataarray[$i - 1][0];
-        echo "<div class='thumbnail'>
+        $image = $dataarray[$i - 1][6];
+        $id=$dataarray[$i-1][0];
+        $DOC=$dataarray[$i-1][3];
+        $DOE=$dataarray[$i-1][2];
+        $username=$dataarray[$i-1][4];
+        $name=$dataarray[$i - 1][1];
+        $description=$dataarray[$i - 1][5];
+        echo "<div class='col-lg-4' id='$id'>";
+
+        echo "<div class='thumbnail'><p><strong>Name of Event</strong> : $name</p><div class='thumbnail'>Date of Event : $DOE</div>
                             <img src='/uploads/$image'";
 
-        echo "<center><div class='caption'>";
-        echo $dataarray[$i - 1][4];
-        echo "</center>";
-        echo "</div>
-         
-                            </div>
-                            </div>";
+        echo "<div class='thumbnail'><strong> Description :</strong> $description";
+        echo "<center><div class='caption'> <a class ='btn btn-primary' href='/deleteevent.php?id=$id'>Delete</a>";
+        echo "   <a class=\"btn btn-primary\" href='editeventpage.php?name=$name&id=$id&description=$description'>Edit</a></center>";
+        echo "<br><br><div class='thumbnail'>Date of Creation : $DOC<br>By : $username</div></div></div>
+              </div>
+              </div>";
+        echo "</div>";
+        if ($i % 3 == 1) {
+            echo "<div class='row'>";
+        }
+
     }
 
 } catch (PDOException $e) {
@@ -227,37 +246,19 @@ try {
 ?>
 
 
+
+
 <script>
 
-    //
-    //    $("#uploadform").on("submit",function (event) {
-    //        event.preventDefault();
-    //
-    //        $.ajax({
-    //            type:"POST",
-    //            url:'upload.php',
-    //            data:new FormData(this),
-    //            contentType: false,
-    //            dataType:'text',
-    //            success: function(data){
-    //
-    //
-    //            },
-    //            error:function (err) {
-    //                console.log(err);
-    //                alert(err);
-    //            }
-    //        });
-    //    });
-    //
 
     $("#submitform").on("submit", function (event) {
+
         event.preventDefault();
         console.log($(this).serialize());
-        var form = $('form')[0]; // You need to use standard javascript object here
+        var form = $('form')[0];
         var formData = new FormData(form);
         var username = '<?php echo $username; ?>';
-        // alert(formdata);
+
         $.ajax({
             type: "POST",
             url: 'addEvent.php?username=' + username,
@@ -267,18 +268,18 @@ try {
             dataType: 'json',
             success: function (data) {
 
-
-                //alert(data.result[0]);
                 $('#close').click();
-                $('.container').append("<div class='col-lg-4'>" + data.result[0] + "<div class='thumbnail'>" +
-                    "<img src='/uploads/" + data.result[4] + "'>" + "<div class='caption'>" + data.result[1] + "</div>"
-                    + "</div>");
+                $('.container').append("<div class='col-lg-4'><div class='thumbnail'><strong>Name of Event : </strong>"+ data.result[0]+"<br><div class='thumbnail'>Date of Event : " + data.result[3]+
+                    "</div><img src='/uploads/" + data.result[4] + "'>" + "<div class='caption'>" +
+                    "<br><div class='thumbnail'><strong>Description : </strong>" + data.result[1]+
+                    " <a class ='btn btn-primary'href='/deleteevent.php?id="+data.result[6]+"'>Delete</a> " +"<a class=\"btn btn-primary\" href='editeventpage.php?id="+data.result[6]+"?name="+data.result[0]+"?description="+data.result[1]+"'>Edit</a></center><br><br>"
+                    +"<div class='thumbnail'>Date of Creation : "+data.result[2]+"<br>By : "+data.result[5]+"</div></div>"+
+                   "</div></div>");
 
 
             },
             error: function (err) {
                 console.log(err);
-                alert(err);
 
             }
         });

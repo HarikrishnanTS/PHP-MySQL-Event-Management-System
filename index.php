@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -12,7 +13,17 @@
 <body>
 
 <center>
-    <a href="login.html" class="btn btn-primary">Login</a>
+
+    <?php
+    session_start();
+    //echo '<pre>' . print_r($_SESSION, TRUE) . '</pre>';
+    if(isset($_SESSION['user'])) {
+        echo "<a href='login.php' class='btn btn-primary'>Login</a>";
+    }
+    else {
+        echo "<a href='loginpage.php' class='btn btn-primary'>Login</a>";
+    }
+    ?>
     <a href="registration.html" class="btn btn-primary">Registration</a>
 
 
@@ -53,19 +64,28 @@ try {
         if ($i % 3 == 1) {
             echo "<div class='row'>";
         }
-        $image = $dataarray[$i - 1][5];
-        echo "<div class='col-lg-4'>";
-        echo $dataarray[$i - 1][0];
-        echo "<div class='thumbnail'>
-                <img src='/uploads/$image'";
+        $image = $dataarray[$i - 1][6];
+        $id=$dataarray[$i-1][0];
+        $DOC=$dataarray[$i-1][3];
+        $DOE=$dataarray[$i-1][2];
+        $username=$dataarray[$i-1][4];
+        $name=$dataarray[$i - 1][1];
+        $description=$dataarray[$i - 1][5];
+        echo "<div class='col-lg-4' id='$id'>";
 
-        echo "<center><div class='caption'>";
-        echo $dataarray[$i - 1][4];
-        echo "</center>";
-        echo "</div>
+        echo "<div class='thumbnail'><p><strong>Name of Event</strong> : $name</p><div class='thumbnail'>Date of Event : $DOE</div>
+                            <img src='/uploads/$image'";
 
-        </div>
-    </div>";
+        echo "<div class='thumbnail'><strong> Description :</strong> $description";
+        echo "<center><div class='caption'> <a class ='btn btn-primary' href='/deleteevent.php?id=$id'>Delete</a>";
+        echo "   <a class=\"btn btn-primary\" href='editeventpage.php?name=$name&id=$id&description=$description'>Edit</a></center>";
+        echo "<br><br><div class='thumbnail'>Date of Creation : $DOC<br>By : $username</div></div></div>
+              </div>
+              </div>";
+        if ($i % 3 == 1) {
+            echo "<div class='row'>";
+        }
+        echo "</div>";
     }
 
 } catch (PDOException $e) {

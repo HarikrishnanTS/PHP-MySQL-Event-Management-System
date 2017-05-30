@@ -1,4 +1,5 @@
 <?php
+session_start();
 
 $servername = "localhost";
 $username = "root";
@@ -61,15 +62,16 @@ $dbname = "myDBPDO";
         $year = $_POST["year"];
         $DOC = "$mydate[mday]$mydate[month]$mydate[year]";
         $DOE = $date . '/' . $month . '/' . $year;
-        $dataarray=array($event,$description,$DOC,$DOE,$fileName,$username);
 
+        if(isset($_SESSION['user'])) {
 
-        $sql = "INSERT INTO events (Name,Description,DOE,DOC,Username,Image)
+            $sql = "INSERT INTO events (Name,Description,DOE,DOC,Username,Image)
                 VALUES ('$event',' $description','$DOE','$DOC','$username','$fileName')";
-        // use exec() because no results are returned
-        $conn->exec($sql);
-
-
+            // use exec() because no results are returned
+            $conn->exec($sql);
+            $last_id = $conn->lastInsertId();
+        }
+        $dataarray=array($event,$description,$DOC,$DOE,$fileName,$username,$last_id);
         $data['result'] = $dataarray;
         echo json_encode($data);
 

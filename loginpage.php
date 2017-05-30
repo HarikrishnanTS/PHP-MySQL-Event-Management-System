@@ -1,3 +1,12 @@
+<?php
+session_start();
+
+
+
+if(isset($_SESSION['user'])){
+    header("Location: /login.php");
+}
+?>
 <html>
 <head>
     <title>
@@ -59,10 +68,20 @@
                         </div>
                     </div>
 
+                    <?php
+                   // echo '<pre>' . print_r($_SESSION, TRUE) . '</pre>';
+                    if(isset($_SESSION['message'])) {
+                            echo "<center><span id='message' class='alert alert-danger'>" ;
+                            echo $_SESSION['message'];
+                            $_SESSION['message']=null;
+                    }
 
-                    <center>
-                        <span id="message"></span>
-                    </center>
+                    echo "</span></center>";
+
+
+
+                    ?>
+
 
 
                     <div class="form-group">
