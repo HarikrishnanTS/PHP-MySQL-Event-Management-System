@@ -36,7 +36,7 @@ if(!isset($_SESSION['user'])) {
         $stmt = $conn->query("SELECT * FROM users WHERE username='$username'");
         $row = $stmt->fetch(PDO::FETCH_ASSOC);
 
-        if ($row['username'] == $username && $row['password'] == $password) {
+        if ($row['username'] == $username && $row['password'] == $password && $row['Verified']) {
             $_SESSION['user'] = $username;
             $_SESSION['name']=$row['name'];
             //echo $_SESSION['name'];
@@ -148,7 +148,7 @@ margin-right: 2%;'>Welcome $name</p>";
 
                     <div class="form-group">
                         Upload a File:
-                        <input type="file" name="file" id="fileToUpload">
+                        <input type="file" name="file" id="fileToUpload" accept="image/jpeg,image/png,image/jpg">
                     </div>
 
                     <div class="form-group">
@@ -308,7 +308,7 @@ try {
 
 
     $("#submitform").on("submit", function (event) {
-
+        $('#Done').val('Creating....');
         event.preventDefault();
         console.log($(this).serialize());
         var form = $('form')[0];
@@ -323,20 +323,20 @@ try {
             contentType: false,
             dataType: 'json',
             success: function (data) {
+                $('#Done').val('Done');
 
                 $('#close').click();
                 $('.row').append("<div class='col-lg-4' style='margin-left: 34%'><div class='thumbnail'><strong>Name of Event : </strong>"+ data.result[0]+"<br><div class='thumbnail'>Date of Event : " + data.result[3]+
                     "</div><img src='/uploads/" + data.result[4] + "'>" + "<div class='caption'>" +
                     "<br><div class='thumbnail'><strong>Description : </strong>" + data.result[1]+
                     "<br><a href='"+data.result[6]+"'>Link to the Event</a><br>"+
-                    " <a class ='btn btn-primary'href='/deleteevent.php?id="+data.result[6]+"'>Delete</a> " +"<a class=\"btn btn-primary\" href='editeventpage.php?id="+data.result[6]+"?name="+data.result[0]+"?description="+data.result[1]+"'>Edit</a></center><br><br>"
+                    " <a class ='btn btn-primary'href='/deleteevent.php?id="+data.result[7]+"'>Delete</a> " +"<a class=\"btn btn-primary\" href='editeventpage.php?id="+data.result[7]+"?name="+data.result[0]+"?description="+data.result[1]+"'>Edit</a></center><br><br>"
                     +"<div class='thumbnail'>Date of Creation : "+data.result[2]+"<br>By : "+data.result[5]+"</div></div>"+
                    "</div></div>");
 
-
-
             },
             error: function (err) {
+                $('#Done').val('Done');
                 console.log(err);
 
             }

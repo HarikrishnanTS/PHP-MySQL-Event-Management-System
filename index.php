@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -6,19 +7,17 @@
 
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
-    <link rel="stylesheet" type="text/css"
-          href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"/>
+    <link rel="stylesheet" type="text/css" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"/>
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.1/css/font-awesome.min.css"/>
     <link href='https://fonts.googleapis.com/css?family=Passion+One' rel='stylesheet' type='text/css'/>
     <link href='https://fonts.googleapis.com/css?family=Oxygen' rel='stylesheet' type='text/css'/>
 </head>
-<body>
+<body style="background-color: beige">
 <nav class="navbar navbar-default ">
     <div class="container-fluid">
         <!-- Brand and toggle get grouped for better mobile display -->
         <div class="navbar-header">
-            <button type="button" class="navbar-toggle collapsed" data-toggle="collapse"
-                    data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
+            <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
                 <span class="sr-only">Toggle navigation</span>
                 <span class="icon-bar"></span>
                 <span class="icon-bar"></span>
@@ -45,12 +44,12 @@
             </ul>
             <ul class="nav navbar-nav navbar-right">
                 <ul class="dropdown-menu">
-                    <li><a href="#">Action</a></li>
-                    <li><a href="#">Another action</a></li>
-                    <li><a href="#">Something else here</a></li>
-                    <li role="separator" class="divider"></li>
-                    <li><a href="#">Separated link</a></li>
-                </ul>
+                        <li><a href="#">Action</a></li>
+                        <li><a href="#">Another action</a></li>
+                        <li><a href="#">Something else here</a></li>
+                        <li role="separator" class="divider"></li>
+                        <li><a href="#">Separated link</a></li>
+                    </ul>
                 </li>
             </ul>
         </div><!-- /.navbar-collapse -->
@@ -59,7 +58,7 @@
 
 <center>
 
-    <h1>
+    <h1 >
         Create your event and let the world know about it.
     </h1>
     <h3 class="alert alert-success" style="width: 55%">
@@ -69,9 +68,10 @@
     <?php
     session_start();
     //echo '<pre>' . print_r($_SESSION, TRUE) . '</pre>';
-    if (isset($_SESSION['user'])) {
+    if(isset($_SESSION['user'])) {
         echo "<a href='login.php' class='btn btn-primary'>Login</a>";
-    } else {
+    }
+    else {
         echo "<a href='loginpage.php' class='btn btn-primary'>Login</a>";
     }
     ?>
@@ -81,7 +81,16 @@
     <br>
     <br>
     <br>
-    <span id="span"></span>
+    <span id="span">
+        <h1 class="alert alert-success" style="width: 55%">
+            WATCH OUT THE LATEST EVENTS BELOW.
+
+        </h1>
+        <br>
+            <br>
+            <br>
+            <br>
+    </span>
 
 </center>
 <?php
@@ -103,23 +112,24 @@ try {
     $conn = null;
 
 
+
     echo "<div class='container'>";
     echo "<div class='row'>";
-    for ($i = $nRows; $i >= 1; $i--) {
+    for ($i = $nRows; $i >=1 ; $i--) {
 
 
         $image = $dataarray[$i - 1][6];
-        $id = $dataarray[$i - 1][0];
-        $DOC = $dataarray[$i - 1][3];
-        $DOE = $dataarray[$i - 1][2];
-        $username = $dataarray[$i - 1][4];
-        $name = $dataarray[$i - 1][1];
-        $description = $dataarray[$i - 1][5];
-        $link = $dataarray[$i - 1][7];
-        $going = $dataarray[$i - 1][8];
-        $interested = $dataarray[$i - 1][9];
+        $id=$dataarray[$i-1][0];
+        $DOC=$dataarray[$i-1][3];
+        $DOE=$dataarray[$i-1][2];
+        $username=$dataarray[$i-1][4];
+        $name=$dataarray[$i - 1][1];
+        $description=$dataarray[$i - 1][5];
+        $link=$dataarray[$i-1][7];
+        $going=$dataarray[$i-1][8];
+        $interested=$dataarray[$i-1][9];
 
-        if ($i == $nRows)
+        if($i==$nRows)
             echo "<div class='col-lg-4' id='$id' style='margin-left: 34%'>";
 
         else
@@ -146,47 +156,47 @@ try {
 
 <script>
 
-    function interested(id) {
+function interested(id) {
 
 
-        $.ajax({
-            type: "POST",
-            url: 'updateinterest.php?id=' + id,
-            dataType: 'json',
-            success: function (data) {
-                $('#' + id).find("#interested").text('Interested :' + data.result[0]);
-                $('#' + id).find("#interested:enabled").addClass('disabled');
+    $.ajax({
+        type: "POST",
+        url: 'updateinterest.php?id='+id,
+        dataType: 'json',
+        success: function (data) {
+            $('#'+id).find("#interested").text('Interested :' + data.result[0]);
+            $('#'+id).find("#interested:enabled").addClass('disabled');
             },
-            error: function (err) {
-                console.log(err);
+        error: function (err) {
+            console.log(err);
 
-            }
-        });
-    }
+        }
+    });
+}
 
-    function going(id) {
+function going(id) {
 
-        $.ajax({
+    $.ajax({
 
-            type: "POST",
-            dataType: 'json',
-            url: 'updategoing.php?id=' + id,
-            success: function (data) {
-                //$(this).text('Going :' + data.result[0].toString());
-                $('#' + id).find("#going").text('Going : ' + data.result[0].toString());
-                $('#' + id).find("#going:enabled").addClass('disabled');
-                return false;
+        type: "POST",
+        dataType: 'json',
+        url: 'updategoing.php?id=' + id,
+        success: function (data) {
+            //$(this).text('Going :' + data.result[0].toString());
+            $('#'+id).find("#going").text('Going : ' + data.result[0].toString());
+            $('#'+id).find("#going:enabled").addClass('disabled');
+            return false;
             },
 
-            error: function (err) {
-                console.log(err);
+        error: function (err) {
+            console.log(err);
 
-            }
-        });
+        }
+    });
 
-    }
-</script>
+}
+    </script>
 
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
 </body>
 </html>

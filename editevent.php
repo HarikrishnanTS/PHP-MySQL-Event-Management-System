@@ -13,8 +13,7 @@ try {
     // set the PDO error mode to exception
     $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
-    $currentDir = getcwd();
-    $uploadDirectory = "/uploads/";
+
 
     $errors = []; // Store all foreseen and unforseen errors here
 
@@ -25,7 +24,6 @@ try {
     $fileType = $_FILES['file']['type'];
     $fileExtension = strtolower(end(explode('.',$fileName)));
 
-    $uploadPath = $currentDir . $uploadDirectory . basename($fileName);
 
 
     if (! in_array($fileExtension,$fileExtensions)) {
@@ -36,19 +34,18 @@ try {
         $errors[] = "This file is more than 2MB. Sorry, it has to be less than or equal to 2MB";
     }
 
-    if (empty($errors)) {
-        $didUpload = move_uploaded_file($fileTmpName, $uploadPath);
+    $UploadName = $_FILES['file']['name'];
+    $UploadTmp = $_FILES['file']['tmp_name'];
+    $UploadType = $_FILES['file']['type'];
 
-        if ($didUpload) {
-            //echo "The file " . basename($fileName) . " has been uploaded";
-        } else {
-            //echo "An error occurred somewhere. Try again or contact the admin";
-        }
-    } else {
-        //foreach ($errors as $error) {
-        // echo $error . "These are the errors" . "\n";
+    $UploadName = preg_replace("#[^a-z0-9.]#i","", $UploadName);
+
+    if(!$UploadTmp && empty($errors)) {
+        die("No File Selected, Please Upload Again");
+    }else {
+        if(move_uploaded_file($UploadTmp, "uploads/$UploadName"));
+
     }
-
 
 
 
@@ -61,10 +58,11 @@ try {
     $year = $_POST["year"];
     $DOC = "$mydate[mday]$mydate[month]$mydate[year]";
     $DOE = $date . '/' . $month . '/' . $year;
+    $link=$_POST["link"];
 
     if(isset($_SESSION['user'])) {
 
-        $sql =" UPDATE events SET Name = '$event',Description = '$description',DOE = '$DOE',DOC = '$DOC',Image='$fileName' WHERE Id = '$id' ";
+        $sql =" UPDATE events SET Name = '$event',Description = '$description',DOE = '$DOE',DOC = '$DOC',Image='$UploadName',Link='$link' WHERE Id = '$id' ";
         // use exec() because no results are returned
         $conn->exec($sql);
     }
