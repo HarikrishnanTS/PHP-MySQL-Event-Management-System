@@ -47,6 +47,12 @@ try {
 
     }
 
+    if($UploadName==null)
+    {
+        $UploadName='party.jpg';
+    }
+
+
 
 
     $id = $_GET['id'];

@@ -46,7 +46,10 @@ try {
 
     }
 
-
+if($UploadName==null)
+{
+    $UploadName='party.jpg';
+}
 
 
 

@@ -24,7 +24,7 @@ try {
         if ($nRows == 0) {
             if ($password == $confirm) {
                 $sql = "INSERT INTO users (name, password, email,username)
-                VALUES ('$name',' $password','$email','$username')";
+                VALUES ('$name','$password','$email','$username')";
                 // use exec() because no results are returned
                 $conn->exec($sql);
                 $conn = null;
