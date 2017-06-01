@@ -37,6 +37,7 @@ if(!isset($_SESSION['user'])) {
 
         if ($row['username'] == $username && $row['password'] == $password && $row['Verified']) {
             $_SESSION['user'] = $username;
+            $_SESSION['id']=$row['id'];
             $_SESSION['name']=$row['name'];
             //echo $_SESSION['name'];
         } else {
@@ -287,8 +288,8 @@ try {
                             <img src='/uploads/$image'";
 
         echo "<div class='thumbnail'><strong> Description :</strong> $description<br><a href='$link'>Link to the event</a>";
-        echo "<center><div class='caption'> <a class ='btn btn-primary' href='/deleteevent.php?id=$id'>Delete</a>";
-        echo "   <a class=\"btn btn-primary\" href='editeventpage.php?name=$name&id=$id&description=$description'>Edit</a></center>";
+        echo "<center><div class='caption'> <a class ='btn btn-primary' href='/deleteevent.php?id=$id&user=$username'>Delete</a>";
+        echo "   <a class=\"btn btn-primary\" href='editeventpage.php?name=$name&id=$id&user=$username&description=$description'>Edit</a></center>";
         echo "<br><br><div class='thumbnail'>Date of Creation : $DOC<br>By : $username</div></div></div>
               </div>
               </div>";
@@ -329,7 +330,7 @@ try {
                     "</div><img src='/uploads/" + data.result[4] + "'>" + "<div class='caption'>" +
                     "<br><div class='thumbnail'><strong>Description : </strong>" + data.result[1]+
                     "<br><a href='"+data.result[6]+"'>Link to the Event</a><br>"+
-                    " <a class ='btn btn-primary'href='/deleteevent.php?id="+data.result[7]+"'>Delete</a> " +"<a class=\"btn btn-primary\" href='editeventpage.php?id="+data.result[7]+"?name="+data.result[0]+"?description="+data.result[1]+"'>Edit</a></center><br><br>"
+                    " <a class ='btn btn-primary'href='/deleteevent.php?id="+data.result[7]+"&user="+data.result[5]+"'>Delete</a> " +"<a class=\"btn btn-primary\" href='editeventpage.php?id="+data.result[7]+"&user="+data.result[5]+"?name="+data.result[0]+"?description="+data.result[1]+"'>Edit</a></center><br><br>"
                     +"<div class='thumbnail'>Date of Creation : "+data.result[2]+"<br>By : "+data.result[5]+"</div></div>"+
                    "</div></div>");
 

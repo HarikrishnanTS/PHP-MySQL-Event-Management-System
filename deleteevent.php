@@ -13,12 +13,18 @@ try {
     // set the PDO error mode to exception
     $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
     $id = $_GET['id'];
+    $user=$_GET['user'];
 
-    if(isset($_SESSION['user'])) {
+    if($_SESSION['user']==$user) {
         $sql = "DELETE FROM events WHERE id= $id";
         // use exec() because no results are returned
         $conn->exec($sql);
         header("Location: /login.php");
+    }
+
+    else
+    {
+        header("Location: /loginpage.php");
     }
 }
 catch (PDOException $e) {

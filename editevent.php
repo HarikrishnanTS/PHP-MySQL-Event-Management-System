@@ -56,6 +56,7 @@ try {
 
 
     $id = $_GET['id'];
+    $user=$_GET['user'];
     $event = $_POST["event"];
     $description = $_POST["description"];
     $date = $_POST["date"];
@@ -66,7 +67,7 @@ try {
     $DOE = $date . '/' . $month . '/' . $year;
     $link=$_POST["link"];
 
-    if(isset($_SESSION['user'])) {
+    if(($_SESSION['user']==$user)) {
 
         $sql =" UPDATE events SET Name = '$event',Description = '$description',DOE = '$DOE',DOC = '$DOC',Image='$UploadName',Link='$link' WHERE Id = '$id' ";
         // use exec() because no results are returned
